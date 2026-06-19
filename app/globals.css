@@ -129,6 +129,16 @@ a:hover {
   color: #14110d;
 }
 
+/* Klaviatura bilan navigatsiya uchun ko'rinadigan fokus (a11y) */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 3px;
+}
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
 .container {
   max-width: 720px;
   margin: 0 auto;
@@ -306,39 +316,21 @@ a:hover {
   display: flex;
   align-items: flex-start;
   gap: 22px;
-  background: color-mix(in srgb, var(--surface) 88%, transparent);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
   padding: 26px 28px;
-  box-shadow: var(--shadow-sm);
   color: var(--text);
   overflow: hidden;
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  transform: perspective(1100px) rotateX(var(--rx, 0deg))
-    rotateY(var(--ry, 0deg));
-  transform-style: preserve-3d;
-  transition: box-shadow 0.4s var(--ease), border-color 0.4s var(--ease),
-    transform 0.5s var(--ease);
 }
 .post-card:hover {
   opacity: 1;
   box-shadow: var(--shadow-md);
   border-color: var(--border-strong);
 }
-/* Kursor bo'yicha yuradigan yorug'lik */
 .post-glow {
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  opacity: var(--glow, 0);
   background: radial-gradient(
     240px circle at var(--mx, 50%) var(--my, 0%),
     color-mix(in srgb, var(--accent) 22%, transparent),
     transparent 65%
   );
-  transition: opacity 0.4s var(--ease);
-  pointer-events: none;
 }
 .post-index {
   font-family: var(--mono);
@@ -724,6 +716,39 @@ main.container,
   filter: none;
 }
 
+/* ---------- Umumiy karta tizimi (DRY) ---------- */
+/* Yuza: barcha shisha-effektli kartalar uchun yagona ta'rif */
+.post-card,
+.feature-card,
+.about-stat,
+.skill-card {
+  background: color-mix(in srgb, var(--surface) 88%, transparent);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+/* Tilt (3D egilish) — [data-tilt] atributi orqali, JS shu atributni izlaydi */
+[data-tilt] {
+  transform: perspective(1100px) rotateX(var(--rx, 0deg))
+    rotateY(var(--ry, 0deg));
+  transform-style: preserve-3d;
+  transition: box-shadow 0.4s var(--ease), border-color 0.4s var(--ease),
+    transform 0.5s var(--ease);
+  will-change: transform;
+}
+/* Kursor bo'yicha yuradigan yorug'lik (umumiy asos) */
+.post-glow,
+.feature-glow {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  opacity: var(--glow, 0);
+  pointer-events: none;
+  transition: opacity 0.4s var(--ease);
+}
+
 /* ---------- Hero (qayta ishlangan) ---------- */
 .hero {
   position: relative;
@@ -886,34 +911,18 @@ main.container,
 .feature-card {
   position: relative;
   overflow: hidden;
-  background: color-mix(in srgb, var(--surface) 86%, transparent);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
   padding: 28px 24px;
-  box-shadow: var(--shadow-sm);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  transform: perspective(1100px) rotateX(var(--rx, 0deg))
-    rotateY(var(--ry, 0deg));
-  transform-style: preserve-3d;
-  transition: box-shadow 0.4s var(--ease), border-color 0.4s var(--ease),
-    transform 0.5s var(--ease);
 }
 .feature-card:hover {
   box-shadow: var(--shadow-md);
   border-color: var(--border-strong);
 }
 .feature-glow {
-  position: absolute;
-  inset: 0;
-  opacity: var(--glow, 0);
   background: radial-gradient(
     220px circle at var(--mx, 50%) var(--my, 50%),
     color-mix(in srgb, var(--gold) 22%, transparent),
     transparent 60%
   );
-  transition: opacity 0.4s var(--ease);
-  pointer-events: none;
 }
 .feature-icon {
   display: inline-flex;
@@ -1067,17 +1076,7 @@ main.container,
 }
 .about-stat {
   text-align: center;
-  background: color-mix(in srgb, var(--surface) 88%, transparent);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
   padding: 24px 12px;
-  box-shadow: var(--shadow-sm);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  transform: perspective(1100px) rotateX(var(--rx, 0deg))
-    rotateY(var(--ry, 0deg));
-  transform-style: preserve-3d;
-  transition: box-shadow 0.4s var(--ease), transform 0.5s var(--ease);
 }
 .about-stat:hover {
   box-shadow: var(--shadow-md);
@@ -1116,18 +1115,7 @@ main.container,
   perspective: 1100px;
 }
 .skill-card {
-  background: color-mix(in srgb, var(--surface) 88%, transparent);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
   padding: 22px 24px;
-  box-shadow: var(--shadow-sm);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  transform: perspective(1100px) rotateX(var(--rx, 0deg))
-    rotateY(var(--ry, 0deg));
-  transform-style: preserve-3d;
-  transition: box-shadow 0.4s var(--ease), border-color 0.4s var(--ease),
-    transform 0.5s var(--ease);
 }
 .skill-card:hover {
   box-shadow: var(--shadow-md);

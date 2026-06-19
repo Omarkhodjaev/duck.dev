@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef } from "react";
+import { prefersReducedMotion } from "@/lib/dom";
 
 // AudioContext ni modul darajasida saqlaymiz (sahifa o'tishida ham yashaydi)
 let actx = null;
@@ -71,10 +72,7 @@ export default function LogoMark() {
   function onClick() {
     playQuack();
     const el = ref.current;
-    const reduce = window.matchMedia(
-      "(prefers-reduced-motion: reduce)"
-    ).matches;
-    if (el && !reduce) {
+    if (el && !prefersReducedMotion()) {
       el.classList.remove("quack");
       void el.offsetWidth; // animatsiyani qayta ishga tushirish uchun reflow
       el.classList.add("quack");

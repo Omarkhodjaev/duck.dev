@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { prefersReducedMotion } from "@/lib/dom";
 
 /**
  * Interaktiv "hovuz" foni: sekin suzuvchi rangli orblar (logo palitrasida),
@@ -14,9 +15,7 @@ export default function PondCanvas() {
     const canvas = ref.current;
     if (!canvas) return;
     const ctx = canvas.getContext("2d");
-    const reduce = window.matchMedia(
-      "(prefers-reduced-motion: reduce)"
-    ).matches;
+    const reduce = prefersReducedMotion();
 
     let w = 0;
     let h = 0;

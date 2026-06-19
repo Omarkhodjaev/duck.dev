@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { hasFinePointer, prefersReducedMotion } from "@/lib/dom";
 
 /**
  * Pat (feather) ko'rinishidagi maxsus kursor.
@@ -12,14 +13,9 @@ export default function CursorFeather() {
   const outer = useRef(null);
 
   useEffect(() => {
-    const fine = window.matchMedia(
-      "(hover: hover) and (pointer: fine)"
-    ).matches;
-    if (!fine) return;
+    if (!hasFinePointer()) return;
 
-    const reduce = window.matchMedia(
-      "(prefers-reduced-motion: reduce)"
-    ).matches;
+    const reduce = prefersReducedMotion();
     const el = outer.current;
     const root = document.documentElement;
     root.classList.add("has-feather");

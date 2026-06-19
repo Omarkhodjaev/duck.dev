@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import { usePathname } from "next/navigation";
+import { prefersReducedMotion } from "@/lib/dom";
 
 /**
  * Sahifa bo'ylab interaktivlik:
@@ -15,9 +16,7 @@ export default function InteractionLayer() {
   const pathname = usePathname();
 
   useEffect(() => {
-    const reduce = window.matchMedia(
-      "(prefers-reduced-motion: reduce)"
-    ).matches;
+    const reduce = prefersReducedMotion();
 
     // --- scroll progress ---
     const bar = document.getElementById("scroll-progress");

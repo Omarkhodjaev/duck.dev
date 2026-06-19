@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { slugify } from "@/lib/slug";
+import { todayISO } from "@/lib/format";
 
 const STARTER = `## Kirish
 
@@ -17,7 +18,7 @@ console.log("Salom, duck.dev!");
 `;
 
 export default function AdminPage() {
-  const today = new Date().toISOString().slice(0, 10);
+  const today = todayISO();
 
   const [title, setTitle] = useState("");
   const [slug, setSlug] = useState("");

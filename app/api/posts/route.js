@@ -3,8 +3,8 @@ import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
 import { slugify } from "@/lib/slug";
-
-const postsDirectory = path.join(process.cwd(), "posts");
+import { todayISO } from "@/lib/format";
+import { getAllSlugs, postsDirectory } from "@/lib/posts";
 
 // Faqat lokal ishlash (npm run dev) uchun. Jonli saytda fayl yozib bo'lmaydi.
 function devOnly() {
@@ -16,12 +16,7 @@ export async function GET() {
   if (!devOnly()) {
     return NextResponse.json({ error: "Faqat lokal rejimda" }, { status: 403 });
   }
-  if (!fs.existsSync(postsDirectory)) return NextResponse.json({ posts: [] });
-  const posts = fs
-    .readdirSync(postsDirectory)
-    .filter((f) => f.endsWith(".md"))
-    .map((f) => f.replace(/\.md$/, ""));
-  return NextResponse.json({ posts });
+  return NextResponse.json({ posts: getAllSlugs() });
 }
 
 // Yangi maqolani .md fayl sifatida posts/ ga saqlaydi
@@ -72,7 +67,7 @@ export async function POST(request) {
 
     const frontmatter = {
       title,
-      date: body.date || new Date().toISOString().slice(0, 10),
+      date: body.date || todayISO(),
       description: (body.description || "").trim(),
       tags,
     };
