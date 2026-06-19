@@ -9,7 +9,7 @@ export default function Home() {
   return (
     <>
       <section className="hero">
-        <div className="comment">{"// dasturlash haqida yozib boraman"}</div>
+        <span className="eyebrow">Dasturlash blogi</span>
         <h1>{siteConfig.name}</h1>
         <p>{siteConfig.description}</p>
       </section>

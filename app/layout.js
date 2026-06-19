@@ -1,6 +1,7 @@
 import "./globals.css";
 import Link from "next/link";
 import { siteConfig } from "@/lib/config";
+import ThemeToggle from "./components/ThemeToggle";
 
 export const metadata = {
   metadataBase: new URL(siteConfig.url),
@@ -18,20 +19,36 @@ export const metadata = {
   },
 };
 
+// Sahifa chizilishidan OLDIN temani o'rnatamiz — "flash" bo'lmasligi uchun
+const themeScript = `
+(function() {
+  try {
+    var t = localStorage.getItem('theme');
+    if (!t) t = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    document.documentElement.setAttribute('data-theme', t);
+  } catch (e) {
+    document.documentElement.setAttribute('data-theme', 'light');
+  }
+})();
+`;
+
 export default function RootLayout({ children }) {
   return (
-    <html lang="uz">
+    <html lang="uz" suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+      </head>
       <body>
         <header className="site-header">
           <div className="container inner">
             <Link href="/" className="logo">
-              <span className="prompt">$ </span>
-              <span className="name">{siteConfig.name}</span>
-              <span className="cursor">_</span>
+              <span className="logo-mark">🦆</span>
+              <span className="logo-text">{siteConfig.name}</span>
             </Link>
             <nav className="nav">
               <Link href="/">Maqolalar</Link>
               <Link href="/about">Men haqimda</Link>
+              <ThemeToggle />
             </nav>
           </div>
         </header>
@@ -43,7 +60,7 @@ export default function RootLayout({ children }) {
             <span>
               © {new Date().getFullYear()} {siteConfig.name}
             </span>
-            <span>Next.js bilan qurilgan · Markdown</span>
+            <span className="muted">Next.js · Markdown</span>
           </div>
         </footer>
       </body>
