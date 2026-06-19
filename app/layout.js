@@ -2,6 +2,10 @@ import "./globals.css";
 import Link from "next/link";
 import { siteConfig } from "@/lib/config";
 import ThemeToggle from "./components/ThemeToggle";
+import PondCanvas from "./components/PondCanvas";
+import InteractionLayer from "./components/InteractionLayer";
+import LogoMark from "./components/LogoMark";
+import CursorFeather from "./components/CursorFeather";
 
 export const metadata = {
   metadataBase: new URL(siteConfig.url),
@@ -39,10 +43,15 @@ export default function RootLayout({ children }) {
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
       </head>
       <body>
+        <div id="scroll-progress" />
+        <PondCanvas />
+        <InteractionLayer />
+        <CursorFeather />
+        <div className="grain" aria-hidden="true" />
         <header className="site-header">
           <div className="container inner">
             <Link href="/" className="logo">
-              <span className="logo-mark">🦆</span>
+              <LogoMark />
               <span className="logo-text">{siteConfig.name}</span>
             </Link>
             <nav className="nav">
