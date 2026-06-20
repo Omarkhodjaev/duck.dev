@@ -1,6 +1,6 @@
 // Sarlavhani fayl nomiga (slug) aylantiradi.
 // Kirill va o'zbek harflarini lotinga o'giradi, bo'sh joyni "-" qiladi.
-const MAP = {
+const MAP: Record<string, string> = {
   а: "a", б: "b", в: "v", г: "g", д: "d", е: "e", ё: "yo", ж: "j",
   з: "z", и: "i", й: "y", к: "k", л: "l", м: "m", н: "n", о: "o",
   п: "p", р: "r", с: "s", т: "t", у: "u", ф: "f", х: "x", ц: "ts",
@@ -8,7 +8,7 @@ const MAP = {
   я: "ya", ў: "o", қ: "q", ғ: "g", ҳ: "h",
 };
 
-export function slugify(text) {
+export function slugify(text: string): string {
   return (text || "")
     .toLowerCase()
     .trim()

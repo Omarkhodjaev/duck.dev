@@ -4,7 +4,7 @@ const MONTHS = [
   "Iyul", "Avgust", "Sentabr", "Oktabr", "Noyabr", "Dekabr",
 ];
 
-export function formatDate(dateStr) {
+export function formatDate(dateStr: string | null | undefined): string {
   if (!dateStr) return "";
   const d = new Date(dateStr);
   if (Number.isNaN(d.getTime())) return dateStr;
@@ -13,6 +13,6 @@ export function formatDate(dateStr) {
 }
 
 // Bugungi sana ISO formatida (YYYY-MM-DD) — admin va API uchun yagona manba.
-export function todayISO() {
+export function todayISO(): string {
   return new Date().toISOString().slice(0, 10);
 }

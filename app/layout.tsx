@@ -1,4 +1,6 @@
 import "./globals.css";
+import type { Metadata } from "next";
+import type { ReactNode } from "react";
 import Link from "next/link";
 import { siteConfig } from "@/lib/config";
 import ThemeToggle from "./components/ThemeToggle";
@@ -7,7 +9,7 @@ import InteractionLayer from "./components/InteractionLayer";
 import LogoMark from "./components/LogoMark";
 import CursorFeather from "./components/CursorFeather";
 
-export const metadata = {
+export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
   title: {
     default: siteConfig.title,
@@ -36,7 +38,7 @@ const themeScript = `
 })();
 `;
 
-export default function RootLayout({ children }) {
+export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="uz" suppressHydrationWarning>
       <head>
@@ -56,6 +58,7 @@ export default function RootLayout({ children }) {
             </Link>
             <nav className="nav">
               <Link href="/">Maqolalar</Link>
+              <Link href="/kurslar">Kurslar</Link>
               <Link href="/about">Men haqimda</Link>
               <ThemeToggle />
             </nav>

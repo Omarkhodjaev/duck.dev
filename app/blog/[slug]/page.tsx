@@ -1,7 +1,12 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getAllSlugs, getPost } from "@/lib/posts";
+import { getAllSlugs, getPost, type Post } from "@/lib/posts";
 import { formatDate } from "@/lib/format";
+
+interface PageProps {
+  params: Promise<{ slug: string }>;
+}
 
 // Statik generatsiya uchun barcha slug'lar
 export function generateStaticParams() {
@@ -9,7 +14,9 @@ export function generateStaticParams() {
 }
 
 // Har bir maqola uchun SEO metama'lumotlari
-export async function generateMetadata({ params }) {
+export async function generateMetadata({
+  params,
+}: PageProps): Promise<Metadata> {
   const { slug } = await params;
   try {
     const post = await getPost(slug);
@@ -22,10 +29,10 @@ export async function generateMetadata({ params }) {
   }
 }
 
-export default async function PostPage({ params }) {
+export default async function PostPage({ params }: PageProps) {
   const { slug } = await params;
 
-  let post;
+  let post: Post;
   try {
     post = await getPost(slug);
   } catch {

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type ChangeEvent } from "react";
 import { slugify } from "@/lib/slug";
 import { todayISO } from "@/lib/format";
 
@@ -17,6 +17,12 @@ console.log("Salom, duck.dev!");
 \`\`\`
 `;
 
+interface Status {
+  type: "ok" | "err";
+  msg: string;
+  url?: string;
+}
+
 export default function AdminPage() {
   const today = todayISO();
 
@@ -29,9 +35,9 @@ export default function AdminPage() {
   const [content, setContent] = useState(STARTER);
 
   const [html, setHtml] = useState("");
-  const [status, setStatus] = useState(null); // {type, msg}
+  const [status, setStatus] = useState<Status | null>(null);
   const [saving, setSaving] = useState(false);
-  const [existing, setExisting] = useState([]);
+  const [existing, setExisting] = useState<string[]>([]);
 
   // Sarlavhadan slugni avtomatik yaratish (agar foydalanuvchi o'zi tahrirlamagan bo'lsa)
   useEffect(() => {
@@ -47,9 +53,9 @@ export default function AdminPage() {
   }, [status]);
 
   // Jonli preview (debounce 300ms)
-  const timer = useRef(null);
+  const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
   useEffect(() => {
-    clearTimeout(timer.current);
+    if (timer.current) clearTimeout(timer.current);
     timer.current = setTimeout(() => {
       fetch("/api/preview", {
         method: "POST",
@@ -60,7 +66,9 @@ export default function AdminPage() {
         .then((d) => setHtml(d.html || ""))
         .catch(() => {});
     }, 300);
-    return () => clearTimeout(timer.current);
+    return () => {
+      if (timer.current) clearTimeout(timer.current);
+    };
   }, [content]);
 
   async function save() {
@@ -121,7 +129,9 @@ export default function AdminPage() {
             Sarlavha
             <input
               value={title}
-              onChange={(e) => setTitle(e.target.value)}
+              onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                setTitle(e.target.value)
+              }
               placeholder="Masalan: React asoslari"
             />
           </label>
@@ -130,7 +140,7 @@ export default function AdminPage() {
             Slug (URL) <span className="hint">/blog/{slug || "..."}</span>
             <input
               value={slug}
-              onChange={(e) => {
+              onChange={(e: ChangeEvent<HTMLInputElement>) => {
                 setSlugEdited(true);
                 setSlug(slugify(e.target.value));
               }}
@@ -142,7 +152,9 @@ export default function AdminPage() {
             Tavsif
             <input
               value={description}
-              onChange={(e) => setDescription(e.target.value)}
+              onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                setDescription(e.target.value)
+              }
               placeholder="Qisqa tavsif (ro'yxatda va Google'da ko'rinadi)"
             />
           </label>
@@ -153,14 +165,18 @@ export default function AdminPage() {
               <input
                 type="date"
                 value={date}
-                onChange={(e) => setDate(e.target.value)}
+                onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                  setDate(e.target.value)
+                }
               />
             </label>
             <label>
               Teglar (vergul bilan)
               <input
                 value={tags}
-                onChange={(e) => setTags(e.target.value)}
+                onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                  setTags(e.target.value)
+                }
                 placeholder="react, javascript"
               />
             </label>
@@ -170,7 +186,9 @@ export default function AdminPage() {
             Matn (Markdown)
             <textarea
               value={content}
-              onChange={(e) => setContent(e.target.value)}
+              onChange={(e: ChangeEvent<HTMLTextAreaElement>) =>
+                setContent(e.target.value)
+              }
               spellCheck={false}
             />
           </label>

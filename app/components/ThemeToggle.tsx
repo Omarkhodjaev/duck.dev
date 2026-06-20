@@ -2,18 +2,20 @@
 
 import { useEffect, useState } from "react";
 
+type Theme = "light" | "dark";
+
 export default function ThemeToggle() {
-  const [theme, setTheme] = useState(null);
+  const [theme, setTheme] = useState<Theme | null>(null);
 
   // Boshlang'ich temani html elementidan o'qib olamiz
   useEffect(() => {
     const current =
-      document.documentElement.getAttribute("data-theme") || "light";
+      (document.documentElement.getAttribute("data-theme") as Theme) || "light";
     setTheme(current);
   }, []);
 
   function toggle() {
-    const next = theme === "dark" ? "light" : "dark";
+    const next: Theme = theme === "dark" ? "light" : "dark";
     document.documentElement.setAttribute("data-theme", next);
     try {
       localStorage.setItem("theme", next);

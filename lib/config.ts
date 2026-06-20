@@ -12,4 +12,6 @@ export const siteConfig = {
     telegram: "https://t.me",
     email: "mailto:hello@duck.dev",
   },
-};
+} as const;
+
+export type SiteConfig = typeof siteConfig;

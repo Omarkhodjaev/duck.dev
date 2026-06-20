@@ -10,7 +10,7 @@ import { hasFinePointer, prefersReducedMotion } from "@/lib/dom";
  * Faqat "fine pointer" qurilmalarda (sensorli ekranlarda yo'q).
  */
 export default function CursorFeather() {
-  const outer = useRef(null);
+  const outer = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!hasFinePointer()) return;
@@ -31,7 +31,7 @@ export default function CursorFeather() {
 
     const follow = reduce ? 0.45 : 0.2;
 
-    function onMove(e) {
+    function onMove(e: PointerEvent) {
       tx = e.clientX;
       ty = e.clientY;
       if (!visible) {
@@ -45,10 +45,10 @@ export default function CursorFeather() {
     function onUp() {
       root.classList.remove("feather-press");
     }
-    function onOver(e) {
-      const t = e.target;
+    function onOver(e: PointerEvent) {
+      const t = e.target as Element | null;
       const interactive =
-        t.closest &&
+        t &&
         t.closest(
           "a, button, input, textarea, select, [role='button'], .theme-toggle, [data-tilt], .chip"
         );

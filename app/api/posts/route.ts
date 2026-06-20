@@ -6,8 +6,19 @@ import { slugify } from "@/lib/slug";
 import { todayISO } from "@/lib/format";
 import { getAllSlugs, postsDirectory } from "@/lib/posts";
 
+// Admin formadan keladigan maqola ma'lumotlari.
+interface PostPayload {
+  title?: string;
+  slug?: string;
+  description?: string;
+  date?: string;
+  tags?: string | string[];
+  content?: string;
+  overwrite?: boolean;
+}
+
 // Faqat lokal ishlash (npm run dev) uchun. Jonli saytda fayl yozib bo'lmaydi.
-function devOnly() {
+function devOnly(): boolean {
   return process.env.NODE_ENV !== "production";
 }
 
@@ -20,7 +31,7 @@ export async function GET() {
 }
 
 // Yangi maqolani .md fayl sifatida posts/ ga saqlaydi
-export async function POST(request) {
+export async function POST(request: Request) {
   if (!devOnly()) {
     return NextResponse.json(
       { error: "Maqola faqat lokal rejimda (npm run dev) saqlanadi." },
@@ -29,7 +40,7 @@ export async function POST(request) {
   }
 
   try {
-    const body = await request.json();
+    const body = (await request.json()) as PostPayload;
     const title = (body.title || "").trim();
     const content = body.content || "";
 
@@ -57,12 +68,14 @@ export async function POST(request) {
     }
 
     // tags: vergul bilan ajratilgan matn -> massiv
-    let tags = body.tags || [];
-    if (typeof tags === "string") {
-      tags = tags
+    let tags: string[] = [];
+    if (typeof body.tags === "string") {
+      tags = body.tags
         .split(",")
         .map((t) => t.trim())
         .filter(Boolean);
+    } else if (Array.isArray(body.tags)) {
+      tags = body.tags;
     }
 
     const frontmatter = {

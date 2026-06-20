@@ -3,7 +3,13 @@ import { getAllPosts, getAllTags } from "@/lib/posts";
 import { formatDate } from "@/lib/format";
 import { siteConfig } from "@/lib/config";
 
-const features = [
+interface Feature {
+  icon: string;
+  title: string;
+  text: string;
+}
+
+const features: Feature[] = [
   {
     icon: "📝",
     title: "Maqolalar",

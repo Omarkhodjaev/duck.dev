@@ -1,7 +1,7 @@
 // Brauzer muhitidagi kichik yordamchilar (faqat client komponentlarda).
 
 // Foydalanuvchi animatsiyalarni kamaytirishni so'raganmi?
-export function prefersReducedMotion() {
+export function prefersReducedMotion(): boolean {
   return (
     typeof window !== "undefined" &&
     window.matchMedia("(prefers-reduced-motion: reduce)").matches
@@ -9,7 +9,7 @@ export function prefersReducedMotion() {
 }
 
 // Qurilmada aniq (sichqonchali) ko'rsatkich bormi? Sensorli ekranlarda — yo'q.
-export function hasFinePointer() {
+export function hasFinePointer(): boolean {
   return (
     typeof window !== "undefined" &&
     window.matchMedia("(hover: hover) and (pointer: fine)").matches

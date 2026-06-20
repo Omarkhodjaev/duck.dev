@@ -21,8 +21,7 @@ export default function InteractionLayer() {
     // --- scroll progress ---
     const bar = document.getElementById("scroll-progress");
     function onScroll() {
-      const max =
-        document.documentElement.scrollHeight - window.innerHeight;
+      const max = document.documentElement.scrollHeight - window.innerHeight;
       const p = max > 0 ? Math.min(window.scrollY / max, 1) : 0;
       if (bar) bar.style.transform = `scaleX(${p})`;
     }
@@ -30,7 +29,7 @@ export default function InteractionLayer() {
     onScroll();
 
     // --- counters ---
-    function animateCount(el) {
+    function animateCount(el: HTMLElement) {
       const raw = el.getAttribute("data-count") || "";
       const num = parseFloat(raw.replace(/[^0-9.]/g, ""));
       const suffix = raw.replace(/[0-9.\s]/g, "");
@@ -40,7 +39,7 @@ export default function InteractionLayer() {
       }
       const dur = 1300;
       let start = 0;
-      function tick(now) {
+      function tick(now: number) {
         if (!start) start = now;
         const p = Math.min((now - start) / dur, 1);
         const eased = 1 - Math.pow(1 - p, 3);
@@ -56,18 +55,21 @@ export default function InteractionLayer() {
       (entries) => {
         for (const e of entries) {
           if (!e.isIntersecting) continue;
-          e.target.classList.add("in");
-          e.target
-            .querySelectorAll?.("[data-count]")
+          const target = e.target as HTMLElement;
+          target.classList.add("in");
+          target
+            .querySelectorAll<HTMLElement>("[data-count]")
             .forEach(animateCount);
-          if (e.target.hasAttribute("data-count")) animateCount(e.target);
-          io.unobserve(e.target);
+          if (target.hasAttribute("data-count")) animateCount(target);
+          io.unobserve(target);
         }
       },
       { threshold: 0.12, rootMargin: "0px 0px -7% 0px" }
     );
 
-    const reveals = Array.from(document.querySelectorAll("[data-reveal]"));
+    const reveals = Array.from(
+      document.querySelectorAll<HTMLElement>("[data-reveal]")
+    );
     reveals.forEach((el, i) => {
       el.style.setProperty("--reveal-delay", `${(i % 5) * 70}ms`);
       io.observe(el);
@@ -76,10 +78,10 @@ export default function InteractionLayer() {
     // --- tilt + cursor glow ---
     const tiltEls = reduce
       ? []
-      : Array.from(document.querySelectorAll("[data-tilt]"));
+      : Array.from(document.querySelectorAll<HTMLElement>("[data-tilt]"));
 
-    function onTilt(e) {
-      const el = e.currentTarget;
+    function onTilt(e: PointerEvent) {
+      const el = e.currentTarget as HTMLElement;
       const r = el.getBoundingClientRect();
       const mx = (e.clientX - r.left) / r.width;
       const my = (e.clientY - r.top) / r.height;
@@ -89,8 +91,8 @@ export default function InteractionLayer() {
       el.style.setProperty("--ry", `${((mx - 0.5) * 9).toFixed(2)}deg`);
       el.style.setProperty("--glow", "1");
     }
-    function offTilt(e) {
-      const el = e.currentTarget;
+    function offTilt(e: PointerEvent) {
+      const el = e.currentTarget as HTMLElement;
       el.style.setProperty("--rx", "0deg");
       el.style.setProperty("--ry", "0deg");
       el.style.setProperty("--glow", "0");

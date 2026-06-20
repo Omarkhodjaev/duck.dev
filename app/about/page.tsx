@@ -1,18 +1,40 @@
+import type { Metadata } from "next";
 import { siteConfig } from "@/lib/config";
 
-export const metadata = {
+export const metadata: Metadata = {
   title: "Men haqimda",
   description:
     "duck.dev muallifi haqida: tajriba, ko'nikmalar va dasturlashga bo'lgan qiziqishlar.",
 };
 
-const stats = [
+interface Stat {
+  value: string;
+  label: string;
+}
+
+interface SkillGroup {
+  title: string;
+  items: string[];
+}
+
+interface TimelineEntry {
+  year: string;
+  title: string;
+  text: string;
+}
+
+interface Interest {
+  icon: string;
+  text: string;
+}
+
+const stats: Stat[] = [
   { value: "5+", label: "yillik tajriba" },
   { value: "40+", label: "loyiha" },
   { value: "∞", label: "qahva 🐥" },
 ];
 
-const skills = [
+const skills: SkillGroup[] = [
   {
     title: "Frontend",
     items: ["JavaScript / TypeScript", "React & Next.js", "HTML & CSS", "UI/UX"],
@@ -27,7 +49,7 @@ const skills = [
   },
 ];
 
-const timeline = [
+const timeline: TimelineEntry[] = [
   {
     year: "Hozir",
     title: "duck.dev blogini yuritaman",
@@ -50,7 +72,7 @@ const timeline = [
   },
 ];
 
-const interests = [
+const interests: Interest[] = [
   { icon: "⚡", text: "Tezkor va toza kod yozish" },
   { icon: "📚", text: "Yangi texnologiyalarni o'rganish" },
   { icon: "🎨", text: "Chiroyli interfeyslar dizayni" },
@@ -65,7 +87,7 @@ export default function AboutPage() {
       {/* Hero */}
       <header className="about-hero" data-reveal>
         <div className="about-avatar" aria-hidden="true">
-          🐥
+          <img src="/logo.svg" alt="" width={64} height={64} />
         </div>
         <h1>Salom, men {siteConfig.author}!</h1>
         <p className="about-lead">

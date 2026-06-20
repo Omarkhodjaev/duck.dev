@@ -4,11 +4,14 @@ import { useRef } from "react";
 import { prefersReducedMotion } from "@/lib/dom";
 
 // AudioContext ni modul darajasida saqlaymiz (sahifa o'tishida ham yashaydi)
-let actx = null;
+let actx: AudioContext | null = null;
 
 function playQuack() {
   try {
-    const Ctx = window.AudioContext || window.webkitAudioContext;
+    const Ctx =
+      window.AudioContext ||
+      (window as unknown as { webkitAudioContext?: typeof AudioContext })
+        .webkitAudioContext;
     if (!Ctx) return;
     actx = actx || new Ctx();
     if (actx.state === "suspended") actx.resume();
@@ -67,7 +70,7 @@ function playQuack() {
 }
 
 export default function LogoMark() {
-  const ref = useRef(null);
+  const ref = useRef<HTMLImageElement>(null);
 
   function onClick() {
     playQuack();

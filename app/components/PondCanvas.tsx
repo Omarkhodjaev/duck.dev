@@ -3,29 +3,53 @@
 import { useEffect, useRef } from "react";
 import { prefersReducedMotion } from "@/lib/dom";
 
+type RGB = [number, number, number];
+
+interface Orb {
+  x: number;
+  y: number;
+  r: number;
+  dx: number;
+  dy: number;
+  color: RGB;
+  depth: number;
+}
+
+interface Ripple {
+  x: number;
+  y: number;
+  life: number;
+  max: number;
+  color: RGB;
+}
+
 /**
  * Interaktiv "hovuz" foni: sekin suzuvchi rangli orblar (logo palitrasida),
  * kursor bo'yicha parallaks va bosilganda tarqaladigan to'lqin halqalari.
  * Canvas o'zi blur(CSS) bilan yumshatiladi — shuning uchun arzon va silliq.
  */
 export default function PondCanvas() {
-  const ref = useRef(null);
+  const ref = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
-    const canvas = ref.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext("2d");
+    const canvasEl = ref.current;
+    if (!canvasEl) return;
+    const context = canvasEl.getContext("2d");
+    if (!context) return;
+    // Closure ichida narrowing yo'qolmasligi uchun aniq non-null tipli const'lar
+    const canvas: HTMLCanvasElement = canvasEl;
+    const ctx: CanvasRenderingContext2D = context;
     const reduce = prefersReducedMotion();
 
     let w = 0;
     let h = 0;
     let dpr = 1;
     let raf = 0;
-    const orbs = [];
-    const ripples = [];
+    const orbs: Orb[] = [];
+    const ripples: Ripple[] = [];
     const pointer = { x: 0.5, y: 0.5, tx: 0.5, ty: 0.5 };
 
-    function readColors() {
+    function readColors(): RGB[] {
       const s = getComputedStyle(document.documentElement);
       return [
         s.getPropertyValue("--accent").trim() || "#b75c34",
@@ -35,14 +59,13 @@ export default function PondCanvas() {
     }
     let colors = readColors();
 
-    function toRgb(hex) {
+    function toRgb(hex: string): RGB {
       let c = hex.replace("#", "");
-      if (c.length === 3)
-        c = c[0] + c[0] + c[1] + c[1] + c[2] + c[2];
+      if (c.length === 3) c = c[0] + c[0] + c[1] + c[1] + c[2] + c[2];
       const n = parseInt(c, 16);
       return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
     }
-    function rgba([r, g, b], a) {
+    function rgba([r, g, b]: RGB, a: number): string {
       return `rgba(${r},${g},${b},${a})`;
     }
 
@@ -126,11 +149,11 @@ export default function PondCanvas() {
       raf = requestAnimationFrame(loop);
     }
 
-    function onMove(e) {
+    function onMove(e: PointerEvent) {
       pointer.tx = e.clientX / window.innerWidth;
       pointer.ty = e.clientY / window.innerHeight;
     }
-    function onDown(e) {
+    function onDown(e: PointerEvent) {
       const rect = canvas.getBoundingClientRect();
       ripples.push({
         x: e.clientX - rect.left,
